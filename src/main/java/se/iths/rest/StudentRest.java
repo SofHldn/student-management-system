@@ -7,6 +7,7 @@ import se.iths.service.StudentService;
 
 import javax.inject.Inject;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -34,6 +35,7 @@ public class StudentRest {
 
         Student foundStudent = studentService.findStudentById(id);
         String responseMessage = "{\"Student with ID " + id + " was not found in database.\"}";
+
         if(foundStudent == null){
             throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity(responseMessage).build());
         }
@@ -93,11 +95,12 @@ public class StudentRest {
 
         String responseMessage;
         try{
+            responseMessage = "Student with ID " + id + " was successfully removed.";
             studentService.deleteStudent(id);
-            return Response.status(301).entity("yey").build();
+            return Response.status(301).entity(responseMessage).build();
         }catch (Exception err){
-            responseMessage = "{\"Student with ID " + id + " was not found in database.\"}";
-            throw new MyException("error", err, Response.status(Response.Status.NOT_FOUND).entity(responseMessage).build());
+            responseMessage = "Student with ID " + id + " was not found in database.";
+            throw new MyException(responseMessage);
         }
 
 
