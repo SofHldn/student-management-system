@@ -7,7 +7,6 @@ import se.iths.service.StudentService;
 
 import javax.inject.Inject;
 import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -85,6 +84,11 @@ public class StudentRest {
     @Path("{id}")
     @PATCH
     public Response updateLastName(@PathParam("id") Long id, JsonObject lastName) {
+
+        if(studentService.findStudentById(id) == null){
+            String responseMessage = "{ \"There is no Student with id " + id + " in database. \"}";
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity(responseMessage).build());
+        }
         Student updatedStudent = studentService.updateLastName(id, lastName.getString("lastName"));
         return Response.ok(updatedStudent).build();
     }
@@ -95,7 +99,7 @@ public class StudentRest {
 
         String responseMessage;
         try{
-            responseMessage = "Student with ID " + id + " was successfully removed.";
+            responseMessage = "{\"Student with ID " + id + " was successfully removed.\"}";
             studentService.deleteStudent(id);
             return Response.status(301).entity(responseMessage).build();
         }catch (Exception err){
