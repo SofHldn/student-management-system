@@ -1,8 +1,6 @@
 package se.iths.rest;
-
-
 import se.iths.entity.Student;
-import se.iths.exception.MyException;
+import se.iths.exception.StudentNotFoundException;
 import se.iths.service.StudentService;
 
 import javax.inject.Inject;
@@ -24,6 +22,10 @@ public class StudentRest {
     @Path("")
     @POST
     public Response createStudent(Student student){
+        if(student.getFirstName().isEmpty() || student.getLastName().isEmpty() || student.getEmail().isEmpty()){
+            String responseMessage = "{\"Firstname, lastname and email can not be empty!\"}";
+            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity(responseMessage).build());
+        }
         studentService.createStudent(student);
         return Response.status(201).entity(student).build();
     }
@@ -33,10 +35,10 @@ public class StudentRest {
     public Response getStudent(@PathParam("id") Long id) {
 
         Student foundStudent = studentService.findStudentById(id);
-        String responseMessage = "{\"Student with ID " + id + " was not found in database.\"}";
 
         if(foundStudent == null){
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity(responseMessage).build());
+            String responseMessage = responseMessage(id);
+            throw new StudentNotFoundException(responseMessage);
         }
         return Response.status(302).entity(foundStudent).build();
     }
@@ -45,11 +47,9 @@ public class StudentRest {
     @GET
     public Response getStudentByLastname(@QueryParam("lastname") String lastname){
         List<Student> foundStudents = studentService.findStudentByLastName(lastname);
-
-        String responseMessage = "{ \"No students with lastname " + lastname + " were found in database.\"}";
-
         if(foundStudents.isEmpty()){
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity(responseMessage).build());
+            String responseMessage = "{ \"No students with lastname " + lastname + " were found in database.\"}";
+            throw new StudentNotFoundException(responseMessage);
         }
         return Response.status(302).entity(foundStudents).build();
     }
@@ -61,7 +61,7 @@ public class StudentRest {
 
         if(foundStudents.isEmpty()){
             String responseMessage = "{ \"There are no Students registered in the database.\"}";
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity(responseMessage).build());
+            throw new StudentNotFoundException(responseMessage);
         }
         return Response.status(302).entity(foundStudents).build();
     }
@@ -74,8 +74,8 @@ public class StudentRest {
             String responseMessage = "{ \"You need to specify ID number on Student to be updated \"}";
             throw new WebApplicationException(Response.status(Response.Status.FORBIDDEN).entity(responseMessage).build());
         }else if(studentService.findStudentById(student.getId()) == null){
-            String responseMessage = "{ \"There is no Student with id " + student.getId() + " in database. \"}";
-            throw new WebApplicationException(Response.status(Response.Status.FORBIDDEN).entity(responseMessage).build());
+            String responseMessage = responseMessage(student.getId());
+            throw new StudentNotFoundException(responseMessage);
         }
             studentService.updateStudent(student);
         return Response.ok(student).build();
@@ -86,8 +86,8 @@ public class StudentRest {
     public Response updateLastName(@PathParam("id") Long id, JsonObject lastName) {
 
         if(studentService.findStudentById(id) == null){
-            String responseMessage = "{ \"There is no Student with id " + id + " in database. \"}";
-            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity(responseMessage).build());
+            String responseMessage = responseMessage(id);
+            throw new StudentNotFoundException(responseMessage);
         }
         Student updatedStudent = studentService.updateLastName(id, lastName.getString("lastName"));
         return Response.ok(updatedStudent).build();
@@ -98,26 +98,19 @@ public class StudentRest {
     public Response deleteStudent(@PathParam("id") Long id){
 
         String responseMessage;
-        try{
-            responseMessage = "{\"Student with ID " + id + " was successfully removed.\"}";
-            studentService.deleteStudent(id);
-            return Response.status(301).entity(responseMessage).build();
-        }catch (Exception err){
-            responseMessage = "Student with ID " + id + " was not found in database.";
-            throw new MyException(responseMessage);
+        if(studentService.findStudentById(id) == null){
+            responseMessage = responseMessage(id);
+            throw new StudentNotFoundException(responseMessage);
         }
+        studentService.deleteStudent(id);
+        responseMessage = "{\"Student with ID " + id + " was successfully removed.\"}";
+        return Response.status(301).entity(responseMessage).build();
 
 
-//        Student foundStudent = studentService.findStudentById(id);
-//        String responseMessage;
-//        if(foundStudent == null){
-//            responseMessage = "{\"Student with ID " + id + " was not found in database.\"}";
-////            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity(responseMessage).build());
-//            throw new MyException(responseMessage, IllegalArgumentException);
-//        }
-//        responseMessage = "{\"Student with ID " + id + " was successfully removed.\"}";
-//        studentService.deleteStudent(id);
+    }
 
+    public String responseMessage(Long id){
+        return "{ \"There is no Student with id " + id + " in database. \"}";
     }
 
 
