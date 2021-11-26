@@ -1,15 +1,12 @@
 package se.iths.rest;
 
 import se.iths.entity.Subject;
-import se.iths.entity.Teacher;
-import se.iths.exception.StudentNotFoundException;
 import se.iths.service.SubjectService;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.awt.*;
 import java.util.List;
 
 @Path("subjects")
@@ -23,6 +20,10 @@ public class SubjectRest {
     @Path("")
     @POST
     public Response createSubject(Subject subject){
+        if(subject.getClassName().isEmpty()){
+            String responseMessage = "{\"SubjectName can not be empty!\"}";
+            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity(responseMessage).build());
+        }
         Subject createdSubject = subjectService.createSubject(subject);
         return Response.status(201).entity(createdSubject).build();
     }
@@ -34,7 +35,7 @@ public class SubjectRest {
 
         if(foundSubjects.isEmpty()){
             String responseMessage = "{ \"There are no Subjects registered in the database.\"}";
-            throw new StudentNotFoundException(responseMessage);
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity(responseMessage).build());
         }
         return Response.status(302).entity(foundSubjects).build();
     }

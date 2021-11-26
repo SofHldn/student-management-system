@@ -20,7 +20,6 @@ public class SubjectService {
     }
 
     public List<Subject> listAllSubjects(){
-        List<Subject> subjects = entityManager.createQuery("SELECT s from Subject s", Subject.class).getResultList();
 
         return entityManager.createQuery("SELECT s from Subject s", Subject.class).getResultList();
     }

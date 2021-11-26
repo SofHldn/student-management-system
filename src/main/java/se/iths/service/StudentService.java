@@ -7,6 +7,7 @@ import se.iths.entity.Subject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
@@ -34,6 +35,16 @@ public class StudentService {
         return entityManager.createQuery("SELECT s from Student s", Student.class).getResultList();
     }
 
+
+    public List<String> getSubjectTitlesPerStudent(Long id){
+        List<Subject> subjects = entityManager.find(Student.class,id).getSubjectList();
+        List<String> subjectTitles = new ArrayList<>();
+        for (Subject s: subjects) {
+            subjectTitles.add(s.getClassName());
+        }
+        return subjectTitles;
+    }
+
     //UPDATE
     public void updateStudent(Student student){
         entityManager.merge(student);
@@ -51,6 +62,7 @@ public class StudentService {
         entityManager.remove(studentToRemove);
 
     }
+
 
 
 }

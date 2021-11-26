@@ -27,8 +27,8 @@ JSONBODY: {
 }
 * Creates new Subject, Subject object as a parameter
 
-GET: /students/1
-* Gets the student with id 1, Long (PathParam) as parameter
+GET: /students/subjects/11
+* Shows all subjects for student with ID 11, Long (PathParam) as parameter
 
 GET: /students
 * Gets all students in database, no parameter
@@ -37,10 +37,10 @@ GET: /teachers
 * Gets all teachers in database, no parameter
 
 GET: /subjects
-* Gets all subjects in database, no parameter
+* Gets all subjects in database - with list of students taking the class & teacher, no parameter
 
 ## Problems
-I had some problems with creating the Joint-table for the Many-to-many relation between subjects and students.
+I had some problems with creating the Joint-table for the Many-to-many relation between subjects and students. Discussed problems with Andreas and solved it together.
 
 
 

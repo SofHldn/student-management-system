@@ -23,8 +23,12 @@ public class TeacherRest {
     @Path("")
     @POST
     public Response createTeacher (Teacher teacher){
+        if(teacher.getFirstName().isEmpty() || teacher.getLastName().isEmpty() || teacher.getEmail().isEmpty()){
+            String responseMessage = "{\"Firstname, lastname and email can not be empty!\"}";
+            throw new WebApplicationException(Response.status(Response.Status.NOT_ACCEPTABLE).entity(responseMessage).build());
+        }
         teacherService.createTeacher(teacher);
-        return Response.ok(teacher).build();
+        return Response.status(201).entity(teacher).build();
     }
 
     @Path("")
@@ -34,7 +38,7 @@ public class TeacherRest {
 
         if(foundTeachers.isEmpty()){
             String responseMessage = "{ \"There are no Teachers registered in the database.\"}";
-            throw new StudentNotFoundException(responseMessage);
+            throw new WebApplicationException(Response.status(Response.Status.NOT_FOUND).entity(responseMessage).build());
         }
         return Response.status(302).entity(foundTeachers).build();
     }

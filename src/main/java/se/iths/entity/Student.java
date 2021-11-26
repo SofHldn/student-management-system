@@ -20,6 +20,7 @@ public class Student {
     private String email;
     private String phoneNumber;
 
+
     @ManyToMany
     @JoinTable(
             name = "student_subject",
@@ -27,6 +28,7 @@ public class Student {
             inverseJoinColumns = @JoinColumn(name = "subject_id")
     )
     private List<Subject> subjectList = new ArrayList<>();
+
 
     public void addSubject(Subject subject){
         subjectList.add(subject);

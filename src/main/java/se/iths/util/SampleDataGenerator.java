@@ -24,12 +24,12 @@ public class SampleDataGenerator {
         Student student2 = new Student("Hermione", "Granger", "hermione@hogwarts.com", "555-555" );
         Student student3 = new Student("Ron", "Weasley", "ron@hogwarts.com", "555-555" );
         Student student4 = new Student("Ginny", "Weasley", "ginny@hogwarts.com", "555-555" );
-        Student student5 = new Student("Fred", "Weasley", "harry@hogwarts.com", "555-555" );
-        Student student6 = new Student("George", "Weasley", "harry@hogwarts.com", "555-555" );
-        Student student7 = new Student("Cho", "Chang", "harry@hogwarts.com", "555-555" );
-        Student student8 = new Student("Draco", "Malfoy", "harry@hogwarts.com", "555-555" );
-        Student student9 = new Student("Katie", "Bell", "harry@hogwarts.com", "555-555" );
-        Student student10 = new Student("Luna", "Lovegood", "harry@hogwarts.com", "555-555" );
+        Student student5 = new Student("Fred", "Weasley", "fred@hogwarts.com", "555-555" );
+        Student student6 = new Student("George", "Weasley", "george@hogwarts.com", "555-555" );
+        Student student7 = new Student("Cho", "Chang", "cho@hogwarts.com", "555-555" );
+        Student student8 = new Student("Draco", "Malfoy", "draco@hogwarts.com", "555-555" );
+        Student student9 = new Student("Katie", "Bell", "katie@hogwarts.com", "555-555" );
+        Student student10 = new Student("Luna", "Lovegood", "luna@hogwarts.com", "555-555" );
 
 
         Teacher teacher1 = new Teacher("Minerva", "McGonagall", "mcgonagall@hogwarts.com");
@@ -69,16 +69,12 @@ public class SampleDataGenerator {
         student3.addSubject(subject1);
         student4.addSubject(subject5);
         student5.addSubject(subject4);
-        student5.addSubject(subject5);
         student6.addSubject(subject2);
         student6.addSubject(subject4);
-        student7.addSubject(subject1);
         student7.addSubject(subject3);
-        student7.addSubject(subject5);
-        student8.addSubject(subject1);
         student8.addSubject(subject2);
-        student9.addSubject(subject1);
-        student10.addSubject(subject1);
+        student9.addSubject(subject4);
+        student10.addSubject(subject4);
 
         entityManager.persist(student1);
         entityManager.persist(student2);

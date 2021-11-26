@@ -43,6 +43,21 @@ public class StudentRest {
         return Response.status(302).entity(foundStudent).build();
     }
 
+    @Path("/subjects/{id}")
+    @GET
+    public Response getStudentSubjects(@PathParam("id") Long id) {
+
+        Student foundStudent = studentService.findStudentById(id);
+
+        if(foundStudent == null){
+            String responseMessage = responseMessage(id);
+            throw new StudentNotFoundException(responseMessage);
+        }
+
+        List<String> subjectList = studentService.getSubjectTitlesPerStudent(id);
+        return Response.status(302).entity("{ \"Student with id " + id + " is listed on following classes: " + subjectList +"\"}").build() ;
+    }
+
     @Path("lastname")
     @GET
     public Response getStudentByLastname(@QueryParam("lastname") String lastname){
@@ -63,6 +78,7 @@ public class StudentRest {
             String responseMessage = "{ \"There are no Students registered in the database.\"}";
             throw new StudentNotFoundException(responseMessage);
         }
+
         return Response.status(302).entity(foundStudents).build();
     }
 

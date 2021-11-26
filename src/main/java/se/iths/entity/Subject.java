@@ -1,6 +1,5 @@
 package se.iths.entity;
 
-import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ public class Subject {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @NotEmpty
-    private String subjectName;
+    private String className;
 
     @ManyToOne
     private Teacher teacher;
@@ -28,8 +27,8 @@ public class Subject {
     public Subject() {
     }
 
-    public Subject(String subjectName) {
-        this.subjectName = subjectName;
+    public Subject(String className) {
+        this.className = className;
     }
 
     public Long getId() {
@@ -40,12 +39,12 @@ public class Subject {
         this.id = id;
     }
 
-    public String getSubjectName() {
-        return subjectName;
+    public String getClassName() {
+        return className;
     }
 
-    public void setSubjectName(String subjectName) {
-        this.subjectName = subjectName;
+    public void setClassName(String className) {
+        this.className = className;
     }
 
 //    @JsonbTransient
